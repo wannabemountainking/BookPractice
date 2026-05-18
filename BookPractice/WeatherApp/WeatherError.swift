@@ -11,7 +11,7 @@ enum WeatherError: LocalizedError {
     case invalidURL
     case networkError
     
-    var errorDescription: String {
+    var errorDescription: String? {
         switch self {
         case .invalidURL: return "URL이 잘못되었습니다"
         case .networkError: return "네트워크가 잘못되었습니다"
