@@ -10,7 +10,6 @@ import SwiftUI
 struct TravellerView: View {
 	
 	@State private var vm: TravellerViewModel = .init()
-	@State private var buttonClicked: Bool = false
 	
     var body: some View {
 		VStack(alignment: .leading, spacing: 50) {
@@ -27,34 +26,41 @@ struct TravellerView: View {
 			.font(.largeTitle)
 			.fontWeight(.ultraLight)
 			
-			Button(action: {
+            Button(action: {
 				Task {
-					buttonClicked.toggle()
-					if buttonClicked {
 						await self.vm.fetchAllWeathers()
-					} else {
-						self.vm.clearAll()
 					}
-				}
 			}, label: {
-				Text("날씨 조회")
+                Text(self.vm.isLoading ? "날씨 조회 중..." : "날씨 조회")
 					.frame(maxWidth: .infinity)
 			})
 			.buttonStyle(.borderedProminent)
+            .disabled(self.vm.isLoading)
 			
-			if buttonClicked {
-				VStack(alignment: .leading, spacing: 40) {
-					ForEach(vm.cityWeathers, id: \.city) { cityWeather in
-						HStack(spacing: 20) {
-							Text(cityWeather.temperatureText)
-							Spacer()
-							Text(cityWeather.fetchedTimeText)
-						}
-					}
-					if !self.vm.isLoading {
-						Text("⏱ 총 소요시간: \(vm.elapedTime)초")
-					}
-				}
+            if self.vm.isLoading {
+                VStack {
+                    Spacer()
+                    HStack(alignment: .center) {
+                        Spacer()
+                        ProgressView("날씨 조회 중...")
+                            .scaleEffect(1.5)
+                        Spacer()
+                    }
+                    Spacer()
+                }
+            } else {
+                VStack(alignment: .leading, spacing: 40) {
+                    ForEach(vm.cityWeathers, id: \.city) { cityWeather in
+                        HStack(spacing: 20) {
+                            Text(cityWeather.temperatureText)
+                            Spacer()
+                            Text(cityWeather.fetchedTimeText)
+                        }
+                    }
+                    if !self.vm.elapedTime.isEmpty {
+                        Text("⏱ 총 소요시간: \(vm.elapedTime)초")
+                    }
+                }
 			}
 			Spacer()
 		}

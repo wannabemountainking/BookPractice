@@ -22,6 +22,7 @@ final class TravellerViewModel {
 	
 	func fetchAllWeathers() async {
 		let startTime = Date()
+        self.cityWeathers = []
 		self.isLoading = true
 		await withTaskGroup(of: CityhWeather.self) { group in
 			for city in cities {
@@ -36,9 +37,7 @@ final class TravellerViewModel {
 				}
 			}
 			for await result in group {
-				if !cityWeathers.contains(where: { $0.city == result.city }) {
-					self.cityWeathers.append(result)
-				}
+                self.cityWeathers.append(result)
 			}
 		}
 		self.isLoading = false
