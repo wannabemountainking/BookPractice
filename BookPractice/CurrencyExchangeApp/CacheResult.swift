@@ -9,5 +9,5 @@ import Foundation
 
 enum CacheResult {
     case hit(ExchangeRate)
-    case miss(ExchangeRate)
+    case miss
 }

@@ -12,6 +12,7 @@ struct ExchangeRate {
     let currency: String
     var rate: Double
     var cachedAt: Date
+	var isExpired: Bool = false
 }
 
 extension ExchangeRate {
@@ -20,9 +21,6 @@ extension ExchangeRate {
     }
     var cachedTimeText: String {
         return "캐시 저장: \(self.cachedAt.timeFormatted)"
-    }
-    var isExpired: Bool {
-        return Date().timeIntervalSince(cachedAt) > 300
     }
 }
 
