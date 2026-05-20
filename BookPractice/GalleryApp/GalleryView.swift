@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct GalleryView: View {
+	
+	
     var body: some View {
         VStack(alignment: .leading, spacing: 50) {
             VStack(spacing: 15) {
@@ -28,7 +30,7 @@ struct GalleryView: View {
                     alignment: .center,
                     spacing: 20,
                     content: {
-                        ForEach(GalleryItem.mockList, id: \.id) { item in
+						ForEach(GalleryItem.mockList, id: \.id) { item in
                             AsyncImage(url: URL(string: item.imageURL)) { phase in
                                 switch phase {
                                 case .empty:
@@ -56,8 +58,18 @@ struct GalleryView: View {
                                         })
                                         .background(Color.yellow.opacity(0.2))
                                 case .failure(let error):
-                                    <#code#>
-                                }
+                                    RoundedRectangle(cornerRadius: 10)
+										.strokeBorder(Color.red, lineWidth: 2)
+										.frame(maxWidth: .infinity)
+										.overlay(content: {
+											Image(systemName: "photo.badge.exclamationmark")
+											Text("이미지 로드 실패")
+										})
+										.background(Color.pink.opacity(0.2))
+									
+								@unknown default:
+									fatalError("Unknown Error")
+								}
                             }
                         }
                     }
