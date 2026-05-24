@@ -26,9 +26,9 @@ struct Book: Identifiable, Sendable {
 extension Book {
 	
 	var id: String { "\(title)_\(isbn)_" }
-//	var ratingText: String { "평점: ⭐️ \(rating) " }
-//	var priceText: String { price.priceText }
-//	var authorsText: String { "\(authors.joined(separator: ", "))" }
+	var ratingText: String { "평점: ⭐️ \(rating) " }
+	var priceText: String { price.priceText }
+	var authorsText: String { "\(authors.joined(separator: ", "))" }
 }
 
 extension Book {
@@ -63,4 +63,7 @@ enum SortOption {
 	case titleAsc
 }
 
+enum BookError: Error {
+    case noSearchResult
+}
 
