@@ -15,25 +15,23 @@ actor CacheService {
 	
 	private init() { }
 	
-	// cache에서 뒤지고 없으면 nil 던지는 메서드
-	func getDataFromCache(searchingText: String) -> CacheEntry? {
-		return cache[searchingText]
+	// mockList를 가져오고 여기서 String이 title, authors에 포함되어 있으면 result: [CacheEntry]에 담아서 saveBooksToCache해서 cache에 담고 값 리턴하기
+	func searchBooks(text: String) -> CacheEntry {
+		
+		return [:]
 	}
 	
-	// 찾은 단어로 얻은 결과를 cache에 저장하는 메서드
-	func saveBooksToCache(searchingText: String, books: [Book]) async {
-		// 1. 검색어가 cache에 있을 때
-		if var existing = self.cache[searchingText] {
-			// a. cache에 저장된 데이터가 60초가 지난 경우 -> cache에서 해당데이터를 지운다. 새로운 값을 넣는다
-			if await existing.isExpired {
-				cache[searchingText] = nil
-				cache[searchingText] = CacheEntry(books: books, savedAt: Date())
-				// b. cache에 저장된 데이터가 60초가 안지난 경우 -> 기존 데이터를 유지한다.
-			} else {
-				cache[searchingText] = existing
-			}
-			// 2. 검색어가 cache에 없을 때
-		} else {
+	
+	// cache에서 뒤지고 없거나, 이미 오래된 데이터는 nil 있고 최신 데이터면 CacheEntry
+	private func getDataFromCache(searchingText: String) -> CacheEntry? {
+		guard let cachedData = cache[searchingText],
+			  !cachedData.isExpired else { return nil }
+		return cachedData
+	}
+	
+	// cache에 저장값이 없거나 이미 오래된 데이터 -> 새 데이터로, 아니면 그냥 놔둠
+	private func saveBooksToCache(searchingText: String, books: [Book]) {
+		if cache[searchingText] == nil || cache[searchingText]!.isExpired {
 			cache[searchingText] = CacheEntry(books: books, savedAt: Date())
 		}
 	}
