@@ -17,9 +17,12 @@ final class BookDemoViewModel {
     var isLoading: Bool = false
     var errorMessage: String? = nil
     var currentBooks: [Book] = []
+	
     init() {
-        self.currentBooks = Book.mockList
+//        self.currentBooks = Book.mockList
+		print("init 실행됨: \(currentBooks.count)권")
         self.sortOptions(option: .titleAsc)
+		print("정렬 후: \(currentBooks.count)권")
     }
     
     func searchBooks(text: String) async {
@@ -41,10 +44,6 @@ final class BookDemoViewModel {
     func sortOptions(option: SortOption) {
         self.isLoading = true
         switch option {
-        case .ratingDesc:
-            self.currentBooks.sort(by: { $0.rating > $1.rating })
-        case .ratingAsc:
-            self.currentBooks.sort(by: { $0.rating < $1.rating })
         case .priceDesc:
             self.currentBooks.sort(by: { $0.price > $1.price })
         case .priceAsc:

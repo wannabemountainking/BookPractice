@@ -7,8 +7,6 @@
 
 import Foundation
 
-
-
 actor CacheService {
 	
 	static let shared = CacheService()
@@ -23,10 +21,9 @@ actor CacheService {
             return cached.books
         } else {
             do {
-                try await Task.sleep(for: .seconds(1))
-                let booksSearched: [Book] = Book.mockList.filter { $0.title.contains(query) || $0.authors.contains(where: { $0.contains(query) }) }
-                self.saveBooksToCache(searchingText: query, books: booksSearched)
-                return booksSearched
+                // TODO: - networking 작업
+//                self.saveBooksToCache(searchingText: query, books: booksSearched)
+                return []
             } catch {
                 throw BookError.noSearchResult
             }
