@@ -7,6 +7,7 @@
 
 import Foundation
 
+nonisolated
 struct BookResponse: Codable {
 	let documents: [BookInfo]
 	let meta: BookMeta
@@ -80,10 +81,7 @@ enum SortOption {
 }
 
 enum BookError: Error {
-	case invalidURL
 	case invalidResponse
-	case noData
-	case noSearchResult
-	case parsingError
+	case invalidURL
 }
 

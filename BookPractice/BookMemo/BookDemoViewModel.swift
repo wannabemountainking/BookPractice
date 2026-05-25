@@ -14,6 +14,8 @@ import Observation
 final class BookDemoViewModel {
     
     private let cacheService = CacheService.shared
+    private let networkService = BookNetworkService.shared
+    
     var isLoading: Bool = false
     var errorMessage: String? = nil
     var currentBooks: [Book] = []
@@ -28,11 +30,18 @@ final class BookDemoViewModel {
     func searchBooks(text: String) async {
         self.isLoading = true
         do {
-            self.currentBooks = try await cacheService.searchBooks(query: text)
+            let result = try await cacheService.searchBooksInCache(query: text)
+            if let result {
+                self.currentBooks = result
+            } else {
+                self.currentBooks = try await networkService.searchBooksFromKakaoData(query: text)
+            }
         } catch let err as BookError {
             switch err {
-            case .noSearchResult:
-                self.errorMessage = "검색결과가 없습니다"
+            case .invalidURL:
+                self.errorMessage = "URL 오류"
+            case .invalidResponse:
+                self.errorMessage = "서버 응답 오류"
             }
         } catch {
             self.errorMessage = "알 수 없는 에러 발생: \(error.localizedDescription)"

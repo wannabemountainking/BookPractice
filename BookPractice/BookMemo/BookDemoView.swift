@@ -98,6 +98,9 @@ struct BookDemoView: View {
 						}
 					}
 				} //:TOOLBAR
+                .alert("에러!", isPresented: $vm.errorMessage != nil) {
+                    
+                }
 			}//:CONDITIONAL
         } //:NAVIGATION
 
