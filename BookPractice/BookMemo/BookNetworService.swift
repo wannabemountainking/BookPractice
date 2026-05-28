@@ -23,9 +23,9 @@ actor BookNetworkService {
     
     private init() {}
     
-    func searchBooksFromKakaoData(query: String) async throws -> [Book] {
+	func searchBooksFromKakaoData(query: String, size: Int, pages: Int) async throws -> [Book] {
         do {
-            let url = try self.createURL(query: query, size: 20)
+            let url = try self.createURL(query: query, size: size, pages: pages )
             let request = self.createURLRequest(url: url)
             let (data, res) = try await URLSession.shared.data(for: request)
             guard let response = res as? HTTPURLResponse,
@@ -51,12 +51,12 @@ actor BookNetworkService {
 }
 
 extension BookNetworkService {
-    private func createURL(query: String, size: Int = 1, pages: Int = 1) throws -> URL {
+    private func createURL(query: String, size: Int, pages: Int) throws -> URL {
         var components: URLComponents? = URLComponents(string: basicUrl)
         components?.queryItems = [
             URLQueryItem(name: "query", value: query),
             URLQueryItem(name: "size", value: String(size)),
-            URLQueryItem(name: "pages", value: String(pages))
+            URLQueryItem(name: "page", value: String(pages))
         ]
         guard let compo = components,
               let url = compo.url else { throw BookError.invalidURL }

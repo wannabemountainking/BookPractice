@@ -27,14 +27,15 @@ final class BookDemoViewModel {
 		print("정렬 후: \(currentBooks.count)권")
     }
     
-    func searchBooks(text: String) async {
+	func searchBooks(text: String, size: Int = 20, pages: Int = 1) async {
         self.isLoading = true
         do {
             let result = try await cacheService.searchBooksInCache(query: text)
             if let result {
                 self.currentBooks = result
             } else {
-                self.currentBooks = try await networkService.searchBooksFromKakaoData(query: text)
+				self.currentBooks = try await networkService.searchBooksFromKakaoData(query: text, size: size, pages: pages)
+				await cacheService.saveBooksToCache(searchingText: text, books: self.currentBooks)
             }
         } catch let err as BookError {
             switch err {

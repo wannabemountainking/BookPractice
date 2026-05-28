@@ -11,6 +11,7 @@ struct BookDemoView: View {
     @State private var vm: BookDemoViewModel = .init()
     @State private var queryText: String = ""
 	@State private var isPriceAsc: Bool = true
+	@State private var hasErrorMessage: Bool = false
     
     var body: some View {
         NavigationStack {
@@ -26,6 +27,7 @@ struct BookDemoView: View {
 					if !queryText.isEmpty {
 						Task {
 							await vm.searchBooks(text: queryText)
+							self.hasErrorMessage = (vm.errorMessage != nil)
 						}
 					}
 				} label: {
@@ -54,25 +56,7 @@ struct BookDemoView: View {
 								.frame(height: 100)
 								.foregroundStyle(Color.orange.opacity(0.2))
 								.overlay(content: {
-									VStack {
-										HStack {
-											Text(book.title)
-												.fontWeight(.bold)
-											Spacer()
-											Text(book.authorsText)
-										}
-										HStack {
-											Spacer()
-											Text(book.priceText)
-										}
-										HStack {
-											Spacer()
-											Text(book.isbnText)
-												.font(.subheadline)
-										}
-									}
-									.font(.title3)
-									.padding(20)
+									self.subView(book: book)
 								})
 								.padding()
 						} //:LOOP
@@ -98,13 +82,38 @@ struct BookDemoView: View {
 						}
 					}
 				} //:TOOLBAR
-                .alert("에러!", isPresented: $vm.errorMessage != nil) {
-                    
-                }
+				.alert("확인", isPresented: $hasErrorMessage) {
+					//action
+				} message: {
+					Text("에러 발생: \(String(describing: self.vm.errorMessage))")
+				}
+
 			}//:CONDITIONAL
         } //:NAVIGATION
 
     }//:body
+	
+	private func subView(book: Book) -> some View {
+		VStack {
+			HStack {
+				Text(book.title)
+					.fontWeight(.bold)
+				Spacer()
+				Text(book.authorsText)
+			}
+			HStack {
+				Spacer()
+				Text(book.priceText)
+			}
+			HStack {
+				Spacer()
+				Text(book.isbnText)
+					.font(.subheadline)
+			}
+		}
+		.font(.title3)
+		.padding(20)
+	}
 }
 
 #Preview {
