@@ -6,7 +6,7 @@
 //
 
 import Foundation
-
+import SwiftData
 
 class UserProfile {
 	var name: String
@@ -39,5 +39,6 @@ enum ProfileError: LocalizedError {
 		}
 	}
 }
+
 
 
