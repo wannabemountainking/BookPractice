@@ -23,7 +23,6 @@ final class DataLoader {
 	
 	func load(completion: @escaping (String) -> Void) {
 		DispatchQueue.global().async {
-			guard let self else {return}
 			completion("데이터 로드 완료")
 		}
 	}
