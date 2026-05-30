@@ -62,72 +62,74 @@ import SwiftData
 
 //API 응답모델
 
-struct Memo: Identifiable, Codable {
-	let id: String
-	let title: String
-	let body: String
-	let createdAt: String
-	
-	enum CodingKeys: String, CodingKey {
-		case id, title, body
-		case createdAt = "created_at"
-	}
-}
+//struct Memo: Identifiable, Codable {
+//	let id: String
+//	let title: String
+//	let body: String
+//	let createdAt: String
+//	
+//	enum CodingKeys: String, CodingKey {
+//		case id, title, body
+//		case createdAt = "created_at"
+//	}
+//}
+//
+//// SwiftData 저장 모델
+////@Model
+//final class SavedMemo: Identifiable {
+//	var id: String
+//	var title: String
+//	var body: String
+//	var createdAt: String
+//	var isPinned: Bool
+//	var localCreatedAt: Date
+//	
+//	init(id: String, title: String, body: String, createdAt: String) {
+//		self.id = id
+//		self.title = title
+//		self.body = body
+//		self.createdAt = createdAt
+//		self.isPinned = false
+//		
+//		self.localCreatedAt = {
+//			let formatter = DateFormatter()
+//			formatter.dateFormat = "yyyy-MM-dd"
+//			return formatter.date(from: createdAt) ?? Date()
+//		}()
+//	}
+//	
+//	convenience init(from memo: Memo) {
+//		self.init(
+//			id: memo.id,
+//			title: memo.title,
+//			body: memo.body,
+//			createdAt: memo.createdAt
+//		)
+//	}
+//	
+//	var asMemo: Memo {
+//		return Memo(
+//			id: self.id,
+//			title: self.title,
+//			body: self.body,
+//			createdAt: self.createdAt
+//		)
+//	}
+//}
+//
+//
+//
+//let memo = Memo(
+//	id: "memo_001",
+//	title: "Swift 공부",
+//	body: "convenience init 배움",
+//	createdAt: "2026-01-19"
+//)
+//
+//let savedMemo = SavedMemo(from: memo)
+//
+//print(savedMemo.isPinned)
+//print(savedMemo.localCreatedAt)
+//print(savedMemo.asMemo)
 
-// SwiftData 저장 모델
-//@Model
-final class SavedMemo: Identifiable {
-	var id: String
-	var title: String
-	var body: String
-	var createdAt: String
-	var isPinned: Bool
-	var localCreatedAt: Date
-	
-	init(id: String, title: String, body: String, createdAt: String) {
-		self.id = id
-		self.title = title
-		self.body = body
-		self.createdAt = createdAt
-		self.isPinned = false
-		
-		self.localCreatedAt = {
-			let formatter = DateFormatter()
-			formatter.dateFormat = "yyyy-MM-dd"
-			return formatter.date(from: createdAt) ?? Date()
-		}()
-	}
-	
-	convenience init(from memo: Memo) {
-		self.init(
-			id: memo.id,
-			title: memo.title,
-			body: memo.body,
-			createdAt: memo.createdAt
-		)
-	}
-	
-	var asMemo: Memo {
-		return Memo(
-			id: self.id,
-			title: self.title,
-			body: self.body,
-			createdAt: self.createdAt
-		)
-	}
-}
 
-
-
-let memo = Memo(
-	id: "memo_001",
-	title: "Swift 공부",
-	body: "convenience init 배움",
-	createdAt: "2026-01-19"
-)
-
-let savedMemo = SavedMemo(from: memo)
-
-print(savedMemo.isPinned)
-print(savedMemo.localCreatedAt)
-print(savedMemo.asMemo)
