@@ -7,12 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		EE992E3F2FCB0CFC00F84C7E /* Secret.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = EE992E3E2FCB0CFC00F84C7E /* Secret.xcconfig */; };
+		918060D82FCB468B00D20F23 /* Secret.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 918060D72FCB468B00D20F23 /* Secret.xcconfig */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		918060D72FCB468B00D20F23 /* Secret.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Secret.xcconfig; sourceTree = "<group>"; };
 		9190D4282FBA093300F000E7 /* BookPractice.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BookPractice.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		EE992E3E2FCB0CFC00F84C7E /* Secret.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Secret.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -50,7 +50,7 @@
 		9190D41F2FBA093300F000E7 = {
 			isa = PBXGroup;
 			children = (
-				EE992E3E2FCB0CFC00F84C7E /* Secret.xcconfig */,
+				918060D72FCB468B00D20F23 /* Secret.xcconfig */,
 				9190D42A2FBA093300F000E7 /* BookPractice */,
 				9190D4292FBA093300F000E7 /* Products */,
 			);
@@ -128,7 +128,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EE992E3F2FCB0CFC00F84C7E /* Secret.xcconfig in Resources */,
+				918060D82FCB468B00D20F23 /* Secret.xcconfig in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -147,7 +147,7 @@
 /* Begin XCBuildConfiguration section */
 		9190D4312FBA093300F000E7 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = EE992E3E2FCB0CFC00F84C7E /* Secret.xcconfig */;
+			baseConfigurationReference = 918060D72FCB468B00D20F23 /* Secret.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -212,7 +212,7 @@
 		};
 		9190D4322FBA093300F000E7 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = EE992E3E2FCB0CFC00F84C7E /* Secret.xcconfig */;
+			baseConfigurationReference = 918060D72FCB468B00D20F23 /* Secret.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
@@ -270,7 +270,7 @@
 		};
 		9190D4342FBA093300F000E7 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = EE992E3E2FCB0CFC00F84C7E /* Secret.xcconfig */;
+			baseConfigurationReference = 918060D72FCB468B00D20F23 /* Secret.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -304,7 +304,7 @@
 		};
 		9190D4352FBA093300F000E7 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = EE992E3E2FCB0CFC00F84C7E /* Secret.xcconfig */;
+			baseConfigurationReference = 918060D72FCB468B00D20F23 /* Secret.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;

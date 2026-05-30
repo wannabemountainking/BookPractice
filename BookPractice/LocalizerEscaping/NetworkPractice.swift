@@ -38,7 +38,7 @@ final class KakaoService {
 		return components?.url
 	}
 	
-	func searchBooks(query: String, page: Int = 1, size: Int = 1) async throws -> [Book]{
+	func searchBooks(query: String, page: Int = 1, size: Int = 20) async throws -> [Book]{
 		guard let url = createURL(query: query, page: page, size: size) else {
 			throw NetworkError.invalidURL
 		}
