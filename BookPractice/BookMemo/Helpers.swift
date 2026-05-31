@@ -55,8 +55,6 @@ struct Book: Identifiable, Sendable {
 	let isbn: String
 	let thumbnailUrlString: String
 	let contents: String
-	var isEnd: Bool
-	var totalCount: Int
 }
 
 extension Book {
