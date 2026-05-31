@@ -18,18 +18,19 @@ enum NetworkError: Error, LocalizedError {
 final class KakaoService {
 	
 	static let shared = KakaoService()
-	
+	private let baseURLString: String = "https://dapi.kakao.com/v3/search/book"
 	private let apiKey: String = {
-		guard let key = Bundle.main.infoDictionary?["KAKAO_API_KEY"] as? String else {return "플랫폼 키가 없습니다"}
-		   return key
-	   }()
+		guard let key = Bundle.main.infoDictionary?["KAKAO_API_KEY"] as? String else {
+			return "인증키 없음"
+		}
+		return key
+	}()
 	
-	private let basicURLString: String = "https://dapi.kakao.com/v3/search/book"
+	private init() {}
 	
-	private init() { }
 	
-	func createURL(query: String, page: Int, size: Int) -> URL? {
-		var components = URLComponents(string: basicURLString)
+	private func createURL(query: String, page: Int, size: Int) -> URL? {
+		var components = URLComponents(string: baseURLString)
 		components?.queryItems = [
 			URLQueryItem(name: "query", value: query),
 			URLQueryItem(name: "page", value: "\(page)"),
@@ -38,46 +39,30 @@ final class KakaoService {
 		return components?.url
 	}
 	
-	func searchBooks(query: String, page: Int = 1, size: Int = 20) async throws -> [Book]{
+	func searchBooks(query: String, page: Int = 1, size: Int = 20) async throws -> BookResponse {
 		guard let url = createURL(query: query, page: page, size: size) else {
 			throw NetworkError.invalidURL
 		}
+		
 		var request = URLRequest(url: url)
 		request.httpMethod = "GET"
 		request.setValue("KakaoAK \(apiKey)", forHTTPHeaderField: "Authorization")
 		
-		print("Authorization: \(request.value(forHTTPHeaderField: "Authorization") ?? "없음")")
-		print("URL: \(url)")
-		
 		do {
 			let (data, res) = try await URLSession.shared.data(for: request)
-			print("Status Code: \((res as? HTTPURLResponse)?.statusCode ?? -1)")
+			print((res as? HTTPURLResponse)?.statusCode ?? -1)
 			guard let response = res as? HTTPURLResponse,
 				  (200 ..< 300).contains(response.statusCode) else {
 				throw NetworkError.invalidResponse
 			}
 			
 			do {
-				let decodedData = try JSONDecoder().decode(BookResponse.self, from: data)
-				let bookInfo = decodedData.documents
-				let bookMeta = decodedData.meta
+				return try JSONDecoder().decode(BookResponse.self, from: data)
 				
-				let books = bookInfo.map {
-					Book(
-						title: $0.title,
-						authors: $0.authors,
-						price: $0.salePrice,
-						isbn: $0.isbn,
-						thumbnailUrlString: $0.thumbnailUrlString,
-						contents: $0.contents,
-						isEnd: bookMeta.isEnd,
-						totalCount: bookMeta.totalCount
-					)
-				}
-				return books
 			} catch {
 				throw NetworkError.parsingError
 			}
+			
 		} catch let error as NetworkError {
 			throw error
 		} catch {
