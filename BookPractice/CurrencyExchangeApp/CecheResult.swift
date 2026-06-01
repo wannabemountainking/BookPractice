@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum CacheResult {
+enum CecheResult {
     case hit(ExchangeRate)
     case miss
 }

@@ -9,7 +9,7 @@ import SwiftUI
 
 struct KakaoNetworkExerciseView: View {
 	
-	@State private var vm: BookSearchViewModel = .init()
+	@State private var vm: HomeViewModel = .init()
 	@State private var query: String = ""
 	
     var body: some View {

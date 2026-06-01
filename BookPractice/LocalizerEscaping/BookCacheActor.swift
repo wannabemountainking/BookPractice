@@ -15,12 +15,24 @@ struct CacheResult {
 	let timeStamp: Date  // cache 저장 시간
 }
 
-enum CacheType {
-	case search  // searchResultDict 에 저장
-	case category // categoryResultDict 에 저장
-}
+
 
 actor BookCacheActor {
+	
+	enum CacheType: Equatable {
+		case search  // searchResultDict 에 저장
+		case category // categoryResultDict 에 저장
+
+		var description: String {
+			switch self {
+			case .search: return "search"
+			case .category: return "category"
+			}
+		}
+		static func == (lhs: CacheType, rhs: CacheType) -> Bool {
+			return lhs.description == rhs.description
+		}
+	}
 	
 	static let shared = BookCacheActor()
 	
