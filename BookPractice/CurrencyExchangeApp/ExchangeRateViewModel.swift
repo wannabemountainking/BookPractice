@@ -56,7 +56,7 @@ final class ExchangeRateViewModel {
 		self.currentExchangeRateCount = await cache.getCacheCount()
 	}
 	
-	private func fetchRate(currency: String) async -> CacheResult {
+	private func fetchRate(currency: String) async -> CecheResult {
 		await cache.getRate(currency: currency)
 	}
 	

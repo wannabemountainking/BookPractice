@@ -16,18 +16,18 @@ actor ExchangeRateCache {
 	
 	private init() {}
 	
-	func getRate(currency: String) -> CacheResult {
+	func getRate(currency: String) -> CecheResult {
 		
 		guard let currencyExchangeRate = exchangeRateInfos[currency] else {
-			return CacheResult.miss
+			return CecheResult.miss
 		}
 		// 통화별 환율 딕셔너리에 특정 통화의 isExpired 속성 값 변경
 		self.exchangeRateInfos[currency]?.isExpired = checkExpired(currencyExchangeRate)
 		
 		if currencyExchangeRate.isExpired {
-			return CacheResult.miss
+			return CecheResult.miss
 		} else {
-			return CacheResult.hit(currencyExchangeRate)
+			return CecheResult.hit(currencyExchangeRate)
 		}
 	}
 	

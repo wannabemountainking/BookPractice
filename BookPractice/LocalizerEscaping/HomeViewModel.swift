@@ -78,27 +78,10 @@ final class HomeViewModel {
 						)
 						return (category, books)
 						
-					} catch let error as NetworkError {
-						switch error {
-						case .invalidURL:
-							await MainActor.run {
-								self.errMessage = "URL 오류"
-							}
-						case .invalidResponse:
-							await MainActor.run {
-								self.errMessage = "서버 응답 오류"
-							}
-						case .parsingError:
-							await MainActor.run {
-								self.errMessage = "데이터 파싱 오류"
-							}
-						case .networkError:
-							await MainActor.run {
-								self.errMessage = "네트워크 오류"
-							}
-						}
 					} catch {
-						fatalError("알 수 없는 에러: \(error.localizedDescription)")
+                        await MainActor.run {
+                            self.handleError(error)
+                        }
 					}
 					return (category, nil)
 				}
@@ -110,5 +93,20 @@ final class HomeViewModel {
 		}
 		isLoadingCategoryStates = false
 	}
+    
 	
+    private func handleError(_ error: Error) {
+        if let err = error as? NetworkError {
+            switch err {
+            case .invalidURL:
+                self.errMessage = "URL 오류"
+            case .invalidResponse:
+                self.errMessage = "서버 응답 오류"
+            case .parsingError:
+                self.errMessage = "데이터 파싱 오류"
+            case .networkError:
+                self.errMessage = "네트워크 오류"
+            }
+        }
+    }
 }
