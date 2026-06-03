@@ -50,7 +50,6 @@ final class KakaoService {
 		
 		do {
 			let (data, res) = try await URLSession.shared.data(for: request)
-			print((res as? HTTPURLResponse)?.statusCode ?? -1)
 			guard let response = res as? HTTPURLResponse,
 				  (200 ..< 300).contains(response.statusCode) else {
 				throw NetworkError.invalidResponse
