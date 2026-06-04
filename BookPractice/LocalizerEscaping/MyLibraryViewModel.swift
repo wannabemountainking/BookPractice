@@ -75,17 +75,18 @@ final class MyLibraryViewModel {
 		isLoading = true
 		
 		// 2. descriptor 조건(isbn이 동일한 책) 으로 지울 책 찾기
-		let descriptor = FetchDescriptor<MyFavBook>(predicate: #Predicate {
-			$0.isbn == book.isbn
+        let targetIsbn = book.isbn
+		let descriptor = FetchDescriptor<MyFavBook>(predicate: #Predicate<MyFavBook> {
+            $0.isbn == targetIsbn
 		})
 		
 		// 3. 책을 찾아 지운다 SwiftData에서 지우고 modelContext도 저장한다.
 		do {
-			guard let myBook = try modelContext.fetch(descriptor).first else {
-				isLoading = false
-				errorMessage = "목록에 해당 책이 없습니다"
-				return
-			}
+            guard let myBook = try modelContext.fetch(descriptor).first else {
+                isLoading = false
+                errorMessage = "목록에 책이 없습니다"
+                return
+            }
 			modelContext.delete(myBook)
 			try modelContext.save()
 			loadMyBooks()

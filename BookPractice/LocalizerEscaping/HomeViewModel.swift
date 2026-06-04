@@ -105,7 +105,7 @@ final class HomeViewModel {
 		// 1. isLoadingCategory 상태 변경 true 등 상태변경
 		isLoadingCategoryStates = true
 		categoryLoadingStates[category] = true
-		var currentPage = categoryCurrentPage[category] ?? 1
+		let currentPage = categoryCurrentPage[category] ?? 1
 		let nextPage = currentPage + 1
 		
 		// 2. cache에 있으면 categoryBooks에 추가, 없으면 다음 단계
