@@ -20,6 +20,7 @@ final class SearchBookViewModel {
     // properties: 2. SEARCHRESULTS와 각 상태를 담은 변수
     var searchedBooks: [Book] = []
     var isloading: Bool = false
+    var hasSearched: Bool = false
     var currentPage: Int = 1
     var hasMorePage: Bool = true
     var currentQuery: String = ""
@@ -35,6 +36,7 @@ final class SearchBookViewModel {
         defer {
             currentPage = 1
             isloading = false
+            hasSearched = true
         }
         
         // 2. cache에 저장되어 있는 것인지 확인하고 있으면 바로 리턴
@@ -47,7 +49,6 @@ final class SearchBookViewModel {
         do {
             let books = try await fetchBooks(query: query)
             searchedBooks = books
-            
         } catch {
             handleError(error)
         }
@@ -55,7 +56,7 @@ final class SearchBookViewModel {
     
     func loadMoreBooks() async {
         // 1. 상태 초기화
-        guard hasMorePage && !isloading else { return }
+        guard hasMorePage && !isloading && !hasSearched else { return }
         isloading = true
         let nextPage = currentPage + 1
         
@@ -63,6 +64,7 @@ final class SearchBookViewModel {
         defer {
             currentPage = nextPage
             isloading = false
+            hasSearched = true
         }
         
         // 3. cached에 있는지 확인 있으면 바로 가져옴
