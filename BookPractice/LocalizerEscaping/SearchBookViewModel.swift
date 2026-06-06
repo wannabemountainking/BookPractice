@@ -29,11 +29,11 @@ final class SearchBookViewModel {
         // 1. 초기화
         isloading = true
         searchedBooks = []
+		currentQuery = query
         errorMessage = nil
         
         defer {
             currentPage = 1
-            currentQuery = query
             isloading = false
         }
         
@@ -45,7 +45,7 @@ final class SearchBookViewModel {
         
         // 3. cached에 없으면 kakao에서 받아오기
         do {
-            let books = try await fetchBooks(query: currentQuery)
+            let books = try await fetchBooks(query: query)
             searchedBooks = books
             
         } catch {
@@ -55,7 +55,7 @@ final class SearchBookViewModel {
     
     func loadMoreBooks() async {
         // 1. 상태 초기화
-        guard hasMorePage || isloading else { return }
+        guard hasMorePage && !isloading else { return }
         isloading = true
         let nextPage = currentPage + 1
         
@@ -81,33 +81,29 @@ final class SearchBookViewModel {
     }
     
     private func fetchBooks(query: String, page: Int = 1) async throws -> [Book] {
-        do {
-            let bookResponse = try await kakaoService.searchBooks(query: query, page: page)
-            let docs = bookResponse.documents
-            let meta = bookResponse.meta
-            let newBooks = docs.map {
-                Book(
-                    title: $0.title,
-                    authors: $0.authors,
-                    price: $0.salePrice,
-                    isbn: $0.isbn,
-                    thumbnailUrlString: $0.thumbnailUrlString,
-                    contents: $0.contents
-                )
-            }
-            await cacheService.saveToCache(
-                type: .search,
-                query: currentQuery,
-                page: page,
-                books: newBooks,
-                totalCount: meta.totalCount,
-                isEnd: meta.isEnd
-            )
-            hasMorePage = !meta.isEnd
-            return newBooks
-        } catch {
-            throw error
-        }
+		let bookResponse = try await kakaoService.searchBooks(query: query, page: page)
+		let docs = bookResponse.documents
+		let meta = bookResponse.meta
+		let newBooks = docs.map {
+			Book(
+				title: $0.title,
+				authors: $0.authors,
+				price: $0.salePrice,
+				isbn: $0.isbn,
+				thumbnailUrlString: $0.thumbnailUrlString,
+				contents: $0.contents
+			)
+		}
+		await cacheService.saveToCache(
+			type: .search,
+			query: currentQuery,
+			page: page,
+			books: newBooks,
+			totalCount: meta.totalCount,
+			isEnd: meta.isEnd
+		)
+		hasMorePage = !meta.isEnd
+		return newBooks
     }
     
     private func handleError(_ error: Error) {
