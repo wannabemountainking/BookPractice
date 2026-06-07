@@ -56,7 +56,7 @@ final class SearchBookViewModel {
     
     func loadMoreBooks() async {
         // 1. 상태 초기화
-        guard hasMorePage && !isloading && !hasSearched else { return }
+        guard hasMorePage && !isloading else { return }
         isloading = true
         let nextPage = currentPage + 1
         
@@ -65,10 +65,12 @@ final class SearchBookViewModel {
             currentPage = nextPage
             isloading = false
             hasSearched = true
+			print("총 \(searchedBooks.count)권")
         }
         
         // 3. cached에 있는지 확인 있으면 바로 가져옴
         if let cached = await cacheService.getCacheResults(type: .search, query: currentQuery, page: nextPage) {
+			print("캐시 히트! page: \(nextPage), count: \(cached.books.count)")
             searchedBooks.append(contentsOf: cached.books)
             return
         }
@@ -104,6 +106,7 @@ final class SearchBookViewModel {
 			totalCount: meta.totalCount,
 			isEnd: meta.isEnd
 		)
+		
 		hasMorePage = !meta.isEnd
 		return newBooks
     }
