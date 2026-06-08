@@ -59,7 +59,9 @@ final class SearchBookViewModel {
         guard hasMorePage && !isloading else { return }
         isloading = true
         let nextPage = currentPage + 1
-        
+		
+		print("nextPage: \(nextPage), currentPage: \(currentPage)")
+		
         // 2. 마지막에 해야 할 일
         defer {
             currentPage = nextPage
@@ -70,11 +72,10 @@ final class SearchBookViewModel {
         
         // 3. cached에 있는지 확인 있으면 바로 가져옴
         if let cached = await cacheService.getCacheResults(type: .search, query: currentQuery, page: nextPage) {
-			print("캐시 히트! page: \(nextPage), count: \(cached.books.count)")
             searchedBooks.append(contentsOf: cached.books)
             return
         }
-        
+		
         // 4. cached에 없으므로 kakao 호출
         do {
             let newBooks = try await fetchBooks(query: currentQuery, page: nextPage)
@@ -85,30 +86,38 @@ final class SearchBookViewModel {
     }
     
     private func fetchBooks(query: String, page: Int = 1) async throws -> [Book] {
-		let bookResponse = try await kakaoService.searchBooks(query: query, page: page)
-		let docs = bookResponse.documents
-		let meta = bookResponse.meta
-		let newBooks = docs.map {
-			Book(
-				title: $0.title,
-				authors: $0.authors,
-				price: $0.salePrice,
-				isbn: $0.isbn,
-				thumbnailUrlString: $0.thumbnailUrlString,
-				contents: $0.contents
+		do {
+			let bookResponse = try await kakaoService.searchBooks(query: query, page: page)
+			print("bookResponse count: \(bookResponse.documents.count)")
+			
+			let docs = bookResponse.documents
+			let meta = bookResponse.meta
+			let newBooks = docs.map {
+				Book(
+					title: $0.title,
+					authors: $0.authors,
+					price: $0.salePrice,
+					isbn: $0.isbn,
+					thumbnailUrlString: $0.thumbnailUrlString,
+					contents: $0.contents
+				)
+			}
+			await cacheService.saveToCache(
+				type: .search,
+				query: currentQuery,
+				page: page,
+				books: newBooks,
+				totalCount: meta.totalCount,
+				isEnd: meta.isEnd
 			)
+			
+			hasMorePage = !meta.isEnd
+			return newBooks
+		} catch {
+			print("kakaoService 에러: \(error)")
+			return []
 		}
-		await cacheService.saveToCache(
-			type: .search,
-			query: currentQuery,
-			page: page,
-			books: newBooks,
-			totalCount: meta.totalCount,
-			isEnd: meta.isEnd
-		)
 		
-		hasMorePage = !meta.isEnd
-		return newBooks
     }
     
     private func handleError(_ error: Error) {

@@ -129,11 +129,13 @@ extension SearchView {
 							.font(.caption)
 						}
 						.frame(width: 120, height: 180)
-						.task {
+						.onAppear {
 							let current = searchVM.searchedBooks
 							if let index = current.firstIndex(where: { $0.id == book.id }),
 							   index >= current.count - 3 {
-								await searchVM.loadMoreBooks()
+								Task {
+									await searchVM.loadMoreBooks()
+								}
 							}
 						}
 					}
