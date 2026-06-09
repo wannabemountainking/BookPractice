@@ -38,7 +38,8 @@ actor BookNetworkService {
                     price: $0.salePrice,
                     isbn: $0.isbn,
                     thumbnailUrlString: $0.thumbnailUrlString,
-                    contents: $0.contents
+                    contents: $0.contents,
+					url: $0.url
                 )
             }
             return results

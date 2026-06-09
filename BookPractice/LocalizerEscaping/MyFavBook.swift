@@ -17,15 +17,17 @@ final class MyFavBook {
 	var isbn: String
 	var thumbnailUrlString: String
 	var contents: String
+	var url: String
 	var dateAdded: Date
 	
-	init(title: String, authors: [String], price: Int, isbn: String, thumbnailUrlString: String, contents: String) {
+	init(title: String, authors: [String], price: Int, isbn: String, thumbnailUrlString: String, contents: String, url: String) {
 		self.title = title
 		self.authors = authors
 		self.price = price
 		self.isbn = isbn
 		self.thumbnailUrlString = thumbnailUrlString
 		self.contents = contents
+		self.url = url
 		self.dateAdded = Date()
 	}
 	
@@ -36,7 +38,8 @@ final class MyFavBook {
 			price: book.price,
 			isbn: book.isbn,
 			thumbnailUrlString: book.thumbnailUrlString,
-			contents: book.contents
+			contents: book.contents,
+			url: book.url
 		)
 	}
 }
@@ -53,6 +56,10 @@ extension MyFavBook {
 	var thumbnailURL: URL? {
 		URL(string: self.thumbnailUrlString)
 	}
+	
+	var bookURL: URL? {
+		URL(string: self.url)
+	}
 }
 
 // 확장: MyFavBook -> Book 변환
@@ -64,7 +71,8 @@ extension MyFavBook {
 			price: self.price,
 			isbn: self.isbn,
 			thumbnailUrlString: self.thumbnailUrlString,
-			contents: self.contents
+			contents: self.contents,
+			url: self.url
 		)
 	}
 }

@@ -19,6 +19,7 @@ struct BookResponse: Codable {
 		let isbn: String
 		let thumbnailUrlString: String
 		let contents: String
+		let url: String
 		
 		enum CodingKeys: String, CodingKey {
 			case title, authors
@@ -26,6 +27,7 @@ struct BookResponse: Codable {
 			case isbn
 			case thumbnailUrlString = "thumbnail"
 			case contents
+			case url
 		}
 	}
 	
@@ -55,6 +57,7 @@ struct Book: Identifiable, Sendable {
 	let isbn: String
 	let thumbnailUrlString: String
 	let contents: String
+	let url: String
 }
 
 extension Book {
@@ -62,6 +65,7 @@ extension Book {
 	var priceText: String { price.priceText }
 	var authorsText: String { "\(authors.joined(separator: ", "))" }
 	var isbnText: String { "ISBN: \(isbn)" }
+	var bookURL: URL? { URL(string: url) }
 }
 
 struct CacheEntry: Sendable {
