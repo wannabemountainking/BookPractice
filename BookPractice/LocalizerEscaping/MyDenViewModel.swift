@@ -125,5 +125,9 @@ extension MyDenViewModel {
 			addMyBook(book: book)
 		}
 	}
+	
+	func clearError() {
+		errorMessage = nil
+	}
 }
 

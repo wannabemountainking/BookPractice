@@ -40,15 +40,14 @@ struct DetailView: View {
 			.navigationBarTitleDisplayMode(.large)
 			.toolbar {
 				ToolbarItem(placement: .topBarLeading) {
-					if isBookmarked {
-						Button("", systemImage: "bookmark.fill") {
-							myDenVM.toggleBookmark(book: book)
-						}
-					} else {
-						Button("", systemImage: "bookmark") {
-							myDenVM.toggleBookmark(book: book)
-							showBookmarkAlert = true
-						}
+					
+					Button {
+						// action
+						toggleBookmark()
+					} label: {
+						Image(systemName: isBookmarked ? "bookmark.fill" : "bookmark")
+							.font(.title3)
+							.foregroundStyle(isBookmarked ? Color.red : .orange)
 					}
 				}
 				ToolbarItem(placement: .topBarTrailing) {
@@ -61,6 +60,11 @@ struct DetailView: View {
 			}
 			.onAppear {
 				myDenVM.setModelContext(context: modelContext)
+			}
+			.overlay(alignment: .top) {
+				if showBookmarkAlert {
+					toastNotification
+				}
 			}
         }
     }
@@ -127,20 +131,26 @@ struct DetailView: View {
 	private var toastNotification: some View {
 		VStack(spacing: 0) {
 			HStack(spacing: 20) {
-				Image(systemName: bookmarkMessage.contains("추가") ? "book.vertical.fill" : "book.vertical")
+				Image(systemName: bookmarkMessage.contains("추가") ? "books.vertical.fill" : "books.vertical")
 					.resizable()
 					.frame(width: 20, height: 20)
-					.foregroundStyle(Color.orange)
+					.foregroundStyle(Color.indigo)
 				
 				Text(bookmarkMessage)
 				
 			}
 			.padding()
 		}
+		.background(
+			RoundedRectangle(cornerRadius: 10)
+				.fill(Color.orange)
+		)
 		.transition(.move(edge: .top).combined(with: .opacity))
 		.onAppear {
 			DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-				showBookmarkAlert = false
+				withAnimation(.spring()) {
+					showBookmarkAlert = false
+				}
 			}
 		}
 	}
@@ -148,6 +158,25 @@ struct DetailView: View {
 	private var isBookmarked: Bool {
 		let _ = forceUpdateTrigger
 		return myDenVM.isBookmarked(book: book)
+	}
+	
+	private func toggleBookmark() {
+		let wasBookmarked = isBookmarked
+		myDenVM.toggleBookmark(book: book)
+		
+		if let errorMessage = myDenVM.errorMessage {
+			bookmarkMessage = errorMessage
+		} else {
+			bookmarkMessage = wasBookmarked ? "제거되었습니다" : "추가되었습니다"
+		}
+		
+		withAnimation(.spring()) {
+			showBookmarkAlert = true
+		}
+		
+		myDenVM.clearError()
+		
+		forceUpdateTrigger.toggle()
 	}
 	
 	
