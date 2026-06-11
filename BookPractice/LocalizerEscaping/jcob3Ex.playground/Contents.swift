@@ -45,12 +45,8 @@ func loadMore() async {
     
     if let cached = cacheEntry[cacheKey] {
         if Date().timeIntervalSince(cached.savedAt) <= 3 {
-            if var existing = cacheEntry[cacheKey] {
-                existing.books.append(contentsOf: cached.books)
-                cacheEntry[cacheKey] = existing
-                books.append(contentsOf: cached.books)
-                return
-            }
+			books.append(contentsOf: cached.books)
+			return
         }
     }
     
@@ -83,7 +79,8 @@ func search(query: String) async {
         isLoading = false
     }
     
-    if let cached = cacheEntry[query] {
+	print("캐시 키들: \(cacheEntry.keys)")
+    if let cached = cacheEntry["\(currentQuery)_page1"] {
         if Date().timeIntervalSince(cached.savedAt) <= 3 {
 			cacheEntry["\(currentQuery)_page1"] = cached
             books = cached.books
@@ -96,14 +93,46 @@ func search(query: String) async {
     cacheEntry["\(currentQuery)_page1"] = CacheEntry(books: books)
 }
 
-Task {
-    await search(query: "Swift")
-    print("검색 결과: \(books)")
-    
-    await loadMore()
-    print("1번 더보기: \(books.count)권")
-    await loadMore()
-    print("2번 더보기: \(books.count)권")
-    await loadMore()  // 마지막 페이지 이후
-    print("3번 더보기: \(books.count)권")
+//Task {
+//	await search(query: "Swift")
+//	print("검색 결과: \(books)")
+//
+//	await loadMore()
+//	//    print("1번 더보기: \(books.count)권")
+//	print(books)
+//
+//	await loadMore()
+//	//    print("2번 더보기: \(books.count)권")
+//	print(books)
+//
+//	await loadMore()  // 마지막 페이지 이후
+//	//    print("3번 더보기: \(books.count)권")
+//	print(books)
+//
+//	await search(query: "Swift")
+//	print("두번째 검색: \(books.count)권")
+//	await search(query: "Swift")
+//	print("3번째 검색: \(books.count)권")
+//	await search(query: "Swift")
+//}
+
+struct MyFavBook {
+	let isbn: String
+}
+
+var myFavBooks: [MyFavBook] = []
+
+@MainActor
+func isBookmarked(book: Book) -> Bool {
+	myFavBooks.contains(where: { $0.isbn == book.isbn })
+}
+
+@MainActor
+func toggleBookmark(book: Book) {
+	if isBookmarked(book: book) {
+		guard let index = myFavBooks.firstIndex(where: { $0.isbn == book.isbn }) else { return }
+		myFavBooks.remove(at: index)
+	} else {
+		myFavBooks.append(MyFavBook(isbn: <#T##String#>))
+	}
 }
