@@ -1,5 +1,5 @@
 import UIKit
-
+//import Observation
 
 struct CacheEntry {
 	var books: [String]
@@ -116,23 +116,103 @@ func search(query: String) async {
 //	await search(query: "Swift")
 //}
 
-struct MyFavBook {
-	let isbn: String
+//final class MyMyBook {
+//    var isbn: String
+//    var title: String
+//    
+//    init(isbn: String, title: String) {
+//        self.isbn = isbn
+//        self.title = title
+//    }
+//}
+//
+//struct MyFavBook {
+//	let isbn: String
+//    let title: String
+//}
+//
+//var myFavBooks: [MyFavBook] = []
+//
+//@MainActor
+//func isBookmarked(book: MyMyBook) -> Bool {
+//	myFavBooks.contains(where: { $0.isbn == book.isbn })
+//}
+//
+//@MainActor
+//func toggleBookmark(book: MyMyBook) {
+//	if isBookmarked(book: book) {
+//		guard let index = myFavBooks.firstIndex(where: { $0.isbn == book.isbn }) else { return }
+//		myFavBooks.remove(at: index)
+//	} else {
+//        myFavBooks.append(MyFavBook(isbn: book.isbn, title: book.title))
+//	}
+//}
+//
+//let book1 = MyMyBook(isbn: "001", title: "Swift 프로그래밍")
+//let book2 = MyMyBook(isbn: "002", title: "SwiftUI 완벽 가이드")
+//
+//// 테스트
+//Task {
+//    print("book1 북마크 상태: \(isBookmarked(book: book1))")
+//    toggleBookmark(book: book1)
+//    print("book1 추가 후: \(myFavBooks.map { $0.isbn })")
+//    toggleBookmark(book: book1)
+//    print("book1 제거 후: \(myFavBooks.map { $0.isbn })")
+//    toggleBookmark(book: book2)
+//    toggleBookmark(book: book1)
+//    print("최종: \(myFavBooks.map { $0.isbn })")
+//}
+
+//@Observable
+//class ViewModel {
+//    var bookmarks: [String] = []
+//    
+//    func toggle(isbn: String) {
+//        if bookmarks.contains(isbn) {
+//            bookmarks.removeAll { $0 == isbn }
+//        } else {
+//            bookmarks.append(isbn)
+//        }
+//    }
+//}
+//
+//struct TestView: View {
+//    @State private var vm = ViewModel()
+//    let isbn = "001"
+//    
+//    // isBookmarked 계산 프로퍼티
+//    private var isBookmarked: Bool {
+//        vm.bookmarks.contains(isbn)
+//    }
+//    
+//    var body: some View {
+//        Button(isBookmarked ? "북마크 해제" : "북마크") {
+//            vm.toggle(isbn: isbn)
+//        }
+//    }
+//}
+
+func makeButton(onTapped: (String) -> Void) {
+    onTapped("책1")
 }
 
-var myFavBooks: [MyFavBook] = []
-
-@MainActor
-func isBookmarked(book: Book) -> Bool {
-	myFavBooks.contains(where: { $0.isbn == book.isbn })
+makeButton { book in
+    print("탭된 책: \(book)")
 }
 
-@MainActor
-func toggleBookmark(book: Book) {
-	if isBookmarked(book: book) {
-		guard let index = myFavBooks.firstIndex(where: { $0.isbn == book.isbn }) else { return }
-		myFavBooks.remove(at: index)
-	} else {
-		myFavBooks.append(MyFavBook(isbn: <#T##String#>))
-	}
+var isSearching: Bool = false
+var wasSearched: Bool = false
+var resultBooks: [String] = []
+
+
+if isSearching {
+    print("검색 중")
+} else if !wasSearched {
+    print("검색 전")
+} else if resultBooks.isEmpty {
+    print("검색 결과 없음")
+} else {
+    print("검색 결과 있음")
 }
+
+
