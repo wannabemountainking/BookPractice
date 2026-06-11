@@ -2,8 +2,8 @@ import UIKit
 
 
 struct CacheEntry {
-    var books: [String]
-    let savedAt: Date = Date()
+	var books: [String]
+	let savedAt: Date = Date()
 }
 
 var cacheEntry: [String: CacheEntry] = [:]
@@ -31,21 +31,23 @@ func loadMore() async {
     // 4. 3.의 경우가 아니면 API호출
     // 5. 4로 호출 값으로 books == 호출 값
     // 6. 추출된 books를 cache에 저장
+	print("guard 진입, hasMorePage: \(hasMorePage)")
     guard !currentQuery.isEmpty && hasMorePage && !isLoading && !books.isEmpty else {return}
-    
+    print(hasMorePage)
     isLoading = true
     let nextPage = currentPage + 1
-    
+    let cacheKey = "\(currentQuery)_page\(nextPage)"
+	
     defer {
         currentPage = nextPage
         isLoading = false
     }
     
-    if let cached = cacheEntry[currentQuery] {
+    if let cached = cacheEntry[cacheKey] {
         if Date().timeIntervalSince(cached.savedAt) <= 3 {
-            if var existing = cacheEntry[currentQuery] {
+            if var existing = cacheEntry[cacheKey] {
                 existing.books.append(contentsOf: cached.books)
-                cacheEntry[currentQuery] = existing
+                cacheEntry[cacheKey] = existing
                 books.append(contentsOf: cached.books)
                 return
             }
@@ -55,11 +57,11 @@ func loadMore() async {
     let booksResult = await fakeAPI(query: currentQuery, page: nextPage)
     hasMorePage = !booksResult.isEnd
     books.append(contentsOf: booksResult.books)
-    if var existing = cacheEntry[currentQuery] {
-        existing.books.append(contentsOf: books)
-        cacheEntry[currentQuery] = existing
+    if var existing = cacheEntry[cacheKey] {
+		existing.books.append(contentsOf: booksResult.books)
+        cacheEntry[cacheKey] = existing
     } else {
-        cacheEntry[currentQuery] = CacheEntry(books: booksResult.books)
+        cacheEntry[cacheKey] = CacheEntry(books: booksResult.books)
     }
 }
 
@@ -76,14 +78,14 @@ func search(query: String) async {
     isLoading = true
     currentPage = 1
     currentQuery = query
-    
+	
     defer {
         isLoading = false
     }
     
     if let cached = cacheEntry[query] {
         if Date().timeIntervalSince(cached.savedAt) <= 3 {
-            cacheEntry[query] = cached
+			cacheEntry["\(currentQuery)_page1"] = cached
             books = cached.books
             return
         }
@@ -91,7 +93,7 @@ func search(query: String) async {
     
     let booksResult = await fakeAPI(query: query, page: 1)
     books = booksResult.books
-    cacheEntry[query] = CacheEntry(books: books)
+    cacheEntry["\(currentQuery)_page1"] = CacheEntry(books: books)
 }
 
 Task {
@@ -100,10 +102,8 @@ Task {
     
     await loadMore()
     print("1번 더보기: \(books.count)권")
-    
     await loadMore()
     print("2번 더보기: \(books.count)권")
-    
     await loadMore()  // 마지막 페이지 이후
     print("3번 더보기: \(books.count)권")
 }
