@@ -216,3 +216,19 @@ if isSearching {
 }
 
 
+func sleepTimer(completion: @Sendable @escaping () -> Void) {
+	DispatchQueue.global().async {
+		completion()
+	}
+}
+
+func sleepTimer2(completion: () -> Void) {
+	completion()
+}
+
+sleepTimer {
+	print("이거 작동하나")
+}
+sleepTimer2 {
+	print("@escaping이 없는 함수인데 작동하나")
+}
